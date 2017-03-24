@@ -46,9 +46,16 @@ public class DeviceHandler {
          Bus bus;
         for (JsonElement deviceElement : deviceListJson){
             JsonObject deviceObject = deviceElement.getAsJsonObject();
+            String busName = deviceObject.get("name").getAsString();
+            String[] busNameArray = busName.split(" ");
+            String busRouteId = busNameArray[1];
             bus = new Bus();
-            bus.setNumber(deviceObject.getAsString());
+            bus.setNumber(deviceObject.get("number").getAsString());
+            bus.setName(busName);
+            bus.setBusRouteId(busRouteId);
+            busList.add(bus);
         }
+
         return response;
     }
     public String getDeviceLocation(String app_id, String bus_id) throws IdeabizException{
