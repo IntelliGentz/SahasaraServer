@@ -49,6 +49,23 @@ public class bus_resource {
         return Response.status(Response.Status.OK).entity(result).build();
     }
 
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @GET
+    @Path("{app_id}/subupdate/")
+    public Response subscribeForUpdates( @PathParam("app_id") String app_id, @PathParam("bus_id") String bus_id  ) {
+        String result = "";
+        if (app_id.equals("*")){
+            app_id = IdeaBizConstants.APP_ID;
+        }
+        try {
+            result = new DeviceHandler().getDeviceLocation(app_id, bus_id);
+        } catch (IdeabizException e) {
+            logger.error("Ideabiz error:"+e.getMessage());
+        }
+        return Response.status(Response.Status.OK).entity(result).build();
+    }
+
 
 
 }

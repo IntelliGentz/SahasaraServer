@@ -11,6 +11,7 @@ public class Bus {
     private double latitude;
     private int state;
     private City lastDestination;
+    private String busRouteId;
     // 1 - on,  0 - off
 
 
@@ -25,6 +26,17 @@ public class Bus {
         this.latitude = latitude;
         this.state = state;
         this.lastDestination = lastDestination;
+    }
+
+    public Bus(String name, String number, long time, double longitude, double latitude, int state, City lastDestination, String busRouteId) {
+        this.name = name;
+        this.number = number;
+        this.time = time;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.state = state;
+        this.lastDestination = lastDestination;
+        this.busRouteId = busRouteId;
     }
 
     public String getName() {
@@ -57,6 +69,14 @@ public class Bus {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getBusRouteId() {
+        return busRouteId;
+    }
+
+    public void setBusRouteId(String busRouteId) {
+        this.busRouteId = busRouteId;
     }
 
     public double getLatitude() {
