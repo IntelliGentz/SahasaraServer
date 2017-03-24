@@ -5,6 +5,8 @@
  */
 
 import com.intelligentz.sahasara.controller.BusController;
+import com.intelligentz.sahasara.controller.RouteController;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -45,19 +47,21 @@ public class A extends HttpServlet {
 //                out.print("Not Added");
 //            }
             
-//            List<Object[]> RouteList = RouteController.getAllRoutes();
-//            for (Object[] routeDetail : RouteList) {
-//                out.print("Route Name : "+routeDetail[1]+"   Start : "+routeDetail[2]+"   End : "+routeDetail[3]+ " </br>");
-//            }
-            
-            List<Object[]> RouteList = BusController.getAvailableBusses( 6.884025, 79.858400, "100", ""); //(latitude, longitude)
+            List<Object[]> RouteList = RouteController.getAllRoutes();
             for (Object[] routeDetail : RouteList) {
-                out.print("Bus Name : "+routeDetail[0]+"   Cur Long : "+routeDetail[1]+"   Cur Lat : "+routeDetail[2]+ " </br>");
+                out.print("Route Name : "+routeDetail[1]+"   Start : "+routeDetail[2]+"   End : "+routeDetail[3]+ " </br>");
             }
+            
+//            List<Object[]> RouteList = BusController.getAvailableBusses( 6.844978, 79.866370, "100", ""); //(latitude, longitude)
+//            for (Object[] routeDetail : RouteList) {
+//                out.print("Bus Name : "+routeDetail[0]+"   Cur Long : "+routeDetail[1]+"   Cur Lat : "+routeDetail[2]+ " </br>");
+//            }
             
         } catch (SQLException ex) {
             Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PropertyVetoException ex) {
             Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
