@@ -5,6 +5,8 @@
  */
 
 import com.intelligentz.sahasara.controller.BusController;
+
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -59,6 +61,8 @@ public class A extends HttpServlet {
             Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
         }
     }
 
