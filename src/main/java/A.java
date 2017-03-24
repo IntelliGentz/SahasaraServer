@@ -50,7 +50,7 @@ public class A extends HttpServlet {
 //                out.print("Route Name : "+routeDetail[1]+"   Start : "+routeDetail[2]+"   End : "+routeDetail[3]+ " </br>");
 //            }
             
-            List<Object[]> RouteList = BusController.getAvailableBusses( 6.841537, 79.867014, "100", ""); //(latitude, longitude)
+            List<Object[]> RouteList = BusController.getAvailableBusses( 6.884025, 79.858400, "100", ""); //(latitude, longitude)
             for (Object[] routeDetail : RouteList) {
                 out.print("Bus Name : "+routeDetail[0]+"   Cur Long : "+routeDetail[1]+"   Cur Lat : "+routeDetail[2]+ " </br>");
             }
