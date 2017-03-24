@@ -10,7 +10,7 @@ public class DatabaseConstants {
     
     public static  final String DRIVER = "com.mysql.jdbc.Driver";
     
-    public static  final String DB_NAME = "iLocate";
+    public static  final String DB_NAME = "sahasara_db";
     public static  final String USERNAME = "root";
     public static  final String PASSWORD = "egodage100";
     

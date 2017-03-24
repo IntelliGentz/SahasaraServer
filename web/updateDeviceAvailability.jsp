@@ -4,7 +4,7 @@
     Author     : ndine
 --%>
 <%@ page session="true" %>
-<%@page import="controller.SetData"%>
+<%@page import="com.intelligentz.sahasara.controller.SetData"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java"%>
 <!DOCTYPE html>
@@ -15,7 +15,7 @@
     </head>
     <body>
         <%
-           response.addHeader("STATE", SetData.setDeviceData("",request.getParameter("device_id"),request.getParameter("week_id"),request.getParameter("state")));
+           response.addHeader("STATE", SetData.setDeviceData(request.getParameter("device_id"),request.getParameter("week_id"),request.getParameter("state")));
         %>
     </body>
 </html>

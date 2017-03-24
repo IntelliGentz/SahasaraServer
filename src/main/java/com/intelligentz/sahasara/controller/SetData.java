@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package com.intelligentz.sahasara.controller;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.DBConnection;
+import com.intelligentz.sahasara.database.DBConnection;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -28,9 +28,9 @@ public class SetData {
     private static ResultSet resultSet;
     private static Connection connection;
     private static final Logger LOGGER = Logger.getLogger( SetData.class.getName() );
-    public static String setDeviceData(String busRoute, String device_id, String week_id, String State){
+    public static String setDeviceData(String device_id, String week_id, String State){
         
-        LOGGER.log(Level.INFO, "getDevideData - "+busRoute);
+        LOGGER.log(Level.INFO, "getDevideData - "+device_id);
         List<String> x = new ArrayList<>(Arrays.asList("mon","tue","wed","thu","fri","sat","sun"));
         String data = "Failed";
         try 
@@ -39,7 +39,7 @@ public class SetData {
                 return data;
             }
             connection = DBConnection.getDBConnection().getConnection();
-            String SQL1 = "UPDATE schedule set "+week_id+"=? where device_id=?";
+            String SQL1 = "UPDATE schedule set "+week_id+"=? where bus_id=?";
 
             preparedStatement = connection.prepareStatement(SQL1);
             preparedStatement.setString(1, State);
