@@ -27,4 +27,14 @@ public class RouteController {
         }
         return routeList;
     }
+    
+    public static String getRouteId(String routeName) throws ClassNotFoundException, SQLException{
+        String query ="SELECT ROUTE_ID FROM route WHERE ROUTE_NAME = ?";
+        Object[] data={routeName};
+        ResultSet resultSet= DBHandle.getData(DBConnection.getConnectionToDB(), query,data);
+        if(resultSet.next()){
+            return resultSet.getString(1);
+        }
+        return null;
+    }
 }

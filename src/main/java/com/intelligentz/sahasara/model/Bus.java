@@ -6,7 +6,7 @@ package com.intelligentz.sahasara.model;
 public class Bus {
     private String name;
     private String number;
-    private long time;
+    private String time;
     private double longitude;
     private double latitude;
     private int state;
@@ -18,7 +18,7 @@ public class Bus {
     public Bus() {
     }
 
-    public Bus(String name, String number, long time, double longitude, double latitude, int state, City lastDestination) {
+    public Bus(String name, String number, String time, double longitude, double latitude, int state, City lastDestination) {
         this.name = name;
         this.number = number;
         this.time = time;
@@ -28,7 +28,7 @@ public class Bus {
         this.lastDestination = lastDestination;
     }
 
-    public Bus(String name, String number, long time, double longitude, double latitude, int state, City lastDestination, String busRouteId) {
+    public Bus(String name, String number, String time, double longitude, double latitude, int state, City lastDestination, String busRouteId) {
         this.name = name;
         this.number = number;
         this.time = time;
@@ -55,11 +55,11 @@ public class Bus {
         this.number = number;
     }
 
-    public long getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

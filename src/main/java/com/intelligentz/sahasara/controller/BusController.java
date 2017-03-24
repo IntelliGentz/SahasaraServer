@@ -47,27 +47,65 @@ public class BusController {
     }
     
     public static boolean isAvailable(String id) throws ClassNotFoundException, SQLException {
-            String query ="SELECT * FROM bus WHERE BUS_NO = ?";
-            Object[] data={id};
-            ResultSet resultSet= DBHandle.getData(DBConnection.getConnectionToDB(), query,data);
-            if(resultSet.next()){
-                return true;
-            }
-            return false;
+        String query ="SELECT * FROM bus WHERE BUS_NO = ?";
+        Object[] data={id};
+        ResultSet resultSet= DBHandle.getData(DBConnection.getConnectionToDB(), query,data);
+        if(resultSet.next()){
+            return true;
+        }
+        return false;
     }
     
-//    public static boolean checkAndUpdateNewBusses(List<Bus> busList) throws ClassNotFoundException, SQLException, IdeabizException{
-//        for (Bus bus : busList) {
-//            if(!isAvailable(bus.getNumber())){
-//                String response = new DeviceHandler().getDeviceLocation(IdeaBizConstants.APP_ID,bus.getNumber());
-//                JsonParser parser = new JsonParser();
-//                JsonArray deviceListJson = (JsonArray) parser.parse(response);
+    public static void checkAndUpdateNewBusses(List<Bus> busList) throws ClassNotFoundException, SQLException, IdeabizException{
+        for (Bus bus : busList) {
+            if(!isAvailable(bus.getNumber())){
+                String response = new DeviceHandler().getDeviceLocation(IdeaBizConstants.APP_ID,bus.getNumber());
+                JsonParser parser = new JsonParser();
+                JsonArray deviceListJson = (JsonArray) parser.parse(response);
+
+                for (JsonElement deviceElement : deviceListJson){
+                    JsonObject deviceObject = deviceElement.getAsJsonObject();
+                    
+                    
+                    String busName = deviceObject.get("name").getAsString();
+                    String[] busNameArray = busName.split(" ");
+                    String busRouteName = busNameArray[1];
+                    bus.setBusRouteId(RouteController.getRouteId(busRouteName));
+                    
+                    int state = 1;
+                    if(deviceObject.get("state").getAsString().equals("off")){
+                        state = 0;
+                    }
+                    bus.setState(state);
+                    
+                    bus.setTime(deviceObject.get("timestamp").getAsString());
+                    bus.setLongitude(deviceObject.get("lon").getAsDouble());
+                    bus.setLatitude(deviceObject.get("lat").getAsDouble());
+                    
+                    // TODO : bus.setLastDestination  
+                }
+            }
+        }
+    }
+    
+//    public static boolean updateBusLocations() throws ClassNotFoundException, SQLException, IdeabizException{
+//        String query="SELECT BUS_NO FROM bus";
+//        ResultSet resultSet = DBHandle.getData(DBConnection.getConnectionToDB(), query);
 //
-//                for (JsonElement deviceElement : deviceListJson){
-//                    //JsonObject deviceObject = deviceElement.getAsJsonObject();
-//
-//                }
-//            }
+//        while(resultSet.next()){
+//            String busNo = resultSet.getString(1);
+//            String response = new DeviceHandler().getDeviceLocation(IdeaBizConstants.APP_ID,busNo);
+//            
+//            JsonParser parser = new JsonParser();
+//            JsonArray deviceListJson = (JsonArray) parser.parse(response);
+//            
+//            for (JsonElement deviceElement : deviceListJson){
+//                  JsonObject deviceObject = deviceElement.getAsJsonObject();
+//                  
+//                  double lon = deviceObject.get("lon").getAsDouble();
+//                  double lat deviceObject.get("lat").getAsDouble();
+//                    
 //        }
+//        
 //    }
 }
