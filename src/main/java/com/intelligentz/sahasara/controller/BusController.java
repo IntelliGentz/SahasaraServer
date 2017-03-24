@@ -24,12 +24,12 @@ import java.util.Vector;
  */
 public class BusController {
     
-    public static List<Object[]> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
+    public static List<Bus> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
         String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
         Object[] data = new Object[]{routeName};
         ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query, data);
 
-        List<Object[]> busList = new ArrayList<Object[]>();
+        List<Bus> busList = new ArrayList<>();
         while (resultSet.next()) {
             String busId = resultSet.getString(1);
             String busName = resultSet.getString(2);
@@ -37,7 +37,7 @@ public class BusController {
             double busLat = resultSet.getDouble(4);
 
             if(DistanceCalculator.isAtRange(busLat, busLon, latitude, longitude, 2))
-                busList.add(new Object[]{busName,busLon,busLat});
+                busList.add(new Bus(busName,busLon,busLat));
         }
         return busList;
     }
@@ -89,25 +89,35 @@ public class BusController {
             }
         }
     }
-    
-//    public static boolean updateBusLocations() throws ClassNotFoundException, SQLException, IdeabizException{
-//        String query="SELECT BUS_NO FROM bus";
-//        ResultSet resultSet = DBHandle.getData(DBConnection.getConnectionToDB(), query);
-//
-//        while(resultSet.next()){
-//            String busNo = resultSet.getString(1);
-//            String response = new DeviceHandler().getDeviceLocation(IdeaBizConstants.APP_ID,busNo);
-//            
-//            JsonParser parser = new JsonParser();
-//            JsonArray deviceListJson = (JsonArray) parser.parse(response);
-//            
-//            for (JsonElement deviceElement : deviceListJson){
-//                  JsonObject deviceObject = deviceElement.getAsJsonObject();
-//                  
-//                  double lon = deviceObject.get("lon").getAsDouble();
-//                  double lat deviceObject.get("lat").getAsDouble();
-//                    
-//        }
-//        
-//    }
+
+    public static boolean updateBusLocations() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException{
+        String query="SELECT BUS_NO FROM bus";
+        ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query);
+
+        while(resultSet.next()){
+            String busNo = resultSet.getString(1);
+            String response = new DeviceHandler().getDeviceLocation(IdeaBizConstants.APP_ID,busNo);
+
+            JsonParser parser = new JsonParser();
+            JsonArray deviceListJson = (JsonArray) parser.parse(response);
+            JsonElement deviceElement = deviceListJson.get(0);
+
+            JsonObject deviceObject = deviceElement.getAsJsonObject();
+
+            String timeStamp = deviceObject.get("timestamp").getAsString();
+            double lon = deviceObject.get("lon").getAsDouble();
+            double lat = deviceObject.get("lat").getAsDouble();
+
+            String query2="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
+            Object data[]={timeStamp,lon,lat,busNo};
+
+            boolean status =DBHandle.setData(DBConnection.getDBConnection().getConnection(),query,data);
+
+            if(!status){
+                return false;
+            }
+
+        }
+        return true;
+    }
 }

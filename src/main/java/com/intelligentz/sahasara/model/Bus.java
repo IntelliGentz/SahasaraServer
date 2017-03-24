@@ -18,6 +18,12 @@ public class Bus {
     public Bus() {
     }
 
+    public Bus(String name, double longitude, double latitude) {
+        this.name = name;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
     public Bus(String name, String number, String time, double longitude, double latitude, int state, City lastDestination) {
         this.name = name;
         this.number = number;
