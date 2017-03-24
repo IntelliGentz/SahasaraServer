@@ -9,7 +9,7 @@ import com.intelligentz.sahasara.constants.AuthorizationTypes;
 import com.intelligentz.sahasara.constants.ContentTypes;
 import com.intelligentz.sahasara.constants.URLs;
 import com.intelligentz.sahasara.exception.IdeabizException;
-import com.intelligentz.sahasara.model.RequestMethod;
+import com.intelligentz.sahasara.model.ideabiz.RequestMethod;
 import org.apache.log4j.Logger;
 
 /**

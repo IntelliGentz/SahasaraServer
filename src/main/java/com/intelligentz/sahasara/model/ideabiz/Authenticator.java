@@ -1,4 +1,4 @@
-package com.intelligentz.sahasara.model;
+package com.intelligentz.sahasara.model.ideabiz;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

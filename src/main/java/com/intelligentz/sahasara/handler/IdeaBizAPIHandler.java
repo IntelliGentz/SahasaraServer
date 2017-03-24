@@ -4,11 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.intelligentz.sahasara.exception.IdeabizException;
-import com.intelligentz.sahasara.model.Authenticator;
+import com.intelligentz.sahasara.model.ideabiz.Authenticator;
 import com.intelligentz.sahasara.model.Data.DataImp;
 import com.intelligentz.sahasara.model.Data.DataInterface;
-import com.intelligentz.sahasara.model.RequestHandller;
-import com.intelligentz.sahasara.model.RequestMethod;
+import com.intelligentz.sahasara.model.ideabiz.RequestHandller;
+import com.intelligentz.sahasara.model.ideabiz.RequestMethod;
 
 
 public class IdeaBizAPIHandler {

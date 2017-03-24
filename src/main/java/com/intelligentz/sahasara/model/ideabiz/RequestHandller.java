@@ -1,4 +1,4 @@
-package com.intelligentz.sahasara.model;
+package com.intelligentz.sahasara.model.ideabiz;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;

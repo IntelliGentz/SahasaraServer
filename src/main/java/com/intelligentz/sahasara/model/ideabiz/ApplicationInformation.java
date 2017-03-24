@@ -1,4 +1,4 @@
-package com.intelligentz.sahasara.model;
+package com.intelligentz.sahasara.model.ideabiz;
 
 /**
  * Created by Malinda on 10/19/2015.

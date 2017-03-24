@@ -1,7 +1,7 @@
 package com.intelligentz.sahasara.model.Data;
 
 import com.intelligentz.sahasara.exception.IdeabizException;
-import com.intelligentz.sahasara.model.ApplicationInformation;
+import com.intelligentz.sahasara.model.ideabiz.ApplicationInformation;
 
 /**
  * Created by Malinda on 10/19/2015.
