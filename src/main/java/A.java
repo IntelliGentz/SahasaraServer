@@ -5,9 +5,6 @@
  */
 
 import com.intelligentz.sahasara.controller.BusController;
-import com.intelligentz.sahasara.controller.CityController;
-import com.intelligentz.sahasara.controller.RouteController;
-import com.intelligentz.sahasara.model.City;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -53,7 +50,7 @@ public class A extends HttpServlet {
 //                out.print("Route Name : "+routeDetail[1]+"   Start : "+routeDetail[2]+"   End : "+routeDetail[3]+ " </br>");
 //            }
             
-            List<Object[]> RouteList = BusController.getAvailableBusses( 6.819666, 79.873804, "100", ""); //(latitude, longitude)
+            List<Object[]> RouteList = BusController.getAvailableBusses( 6.841537, 79.867014, "100", ""); //(latitude, longitude)
             for (Object[] routeDetail : RouteList) {
                 out.print("Bus Name : "+routeDetail[0]+"   Cur Long : "+routeDetail[1]+"   Cur Lat : "+routeDetail[2]+ " </br>");
             }
