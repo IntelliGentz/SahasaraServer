@@ -27,7 +27,7 @@
 		<h2 class="text-center">iLocate Bus schedule table</h2>
 	</div>
     
-        <select style="width:20%; position:absolute; left: 40%;" class="form-control input-sm" >
+        <select style="width:20%; position:absolute; left: 40%;" class="form-control input-sm" onchange="this.options[this.selectedIndex].onclick()">
             <option>Select the route</option>
             <%
                     out.println(GetData.getRouteData());
