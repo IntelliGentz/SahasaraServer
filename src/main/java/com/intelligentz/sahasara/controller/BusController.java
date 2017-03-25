@@ -11,6 +11,7 @@ import com.intelligentz.sahasara.database.DBHandle;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.handler.DeviceHandler;
 import com.intelligentz.sahasara.model.Bus;
+import com.intelligentz.sahasara.model.Schedule;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -45,7 +46,25 @@ public class BusController {
     public static boolean addNewBus(Bus bus) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
         String query="INSERT INTO bus(BUS_NAME,BUS_NO,ROUTE_ID,STATE,LAST_DESTINATION,CURRENT_TIMESTAMP,CURRENT_LONGITUDE,CURRENT_LATITUDE) VALUES(?,?,?,?,?,?,?,?)";
         Object data[]={bus.getName(),bus.getNumber(),bus.getBusRouteId(),bus.getState(),bus.getLastDestination().getId(),bus.getLongitude(),bus.getLatitude()};
-        return DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+        boolean res = DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+        if(res){
+            String query2 ="SELECT BUS_ID FROM bus WHERE BUS_NO = ?";
+            Object[] data2={bus.getNumber()};
+            
+            ResultSet resultSet2= DBHandle.getData(DBConnection.getDBConnection().getConnection(), query,data);
+            if(resultSet2.next()){
+                int busId = resultSet2.getInt(1);
+                
+                String query3="INSERT INTO schedule(BUS_ID) VALUES(?)";
+                Object data3[]={busId};
+                boolean res3 = DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+                if(res3){
+                    return true;
+                }
+            }
+        }
+        return false;
+        
     }
     
     public static boolean isAvailable(String id) throws ClassNotFoundException, SQLException, IOException, PropertyVetoException {
@@ -75,6 +94,7 @@ public class BusController {
                     if (busNameArray.length > 1 ) {
                         busRouteName = busNameArray[1].trim();
                     }
+                    //
                     bus.setBusRouteId(RouteController.getRouteId(busRouteName));
 
                     int state = 1;
@@ -88,6 +108,7 @@ public class BusController {
                     bus.setLatitude(deviceObject.get("lat").getAsDouble());
                     
                     // TODO : bus.setLastDestination
+                    
                     addNewBus(bus);
                 }
             }

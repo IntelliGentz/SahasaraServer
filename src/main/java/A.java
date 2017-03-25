@@ -1,3 +1,10 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
 ///*
 // * To change this license header, choose License Headers in Project Properties.
 // * To change this template file, choose Tools | Templates
@@ -54,8 +61,10 @@
 //
 //            List<Object[]> RouteList = BusController.getAvailableBusses( 6.884025, 79.858400, "100", ""); //(latitude, longitude)
 //            for (Object[] routeDetail : RouteList) {
-//                out.print("Bus Name : "+routeDetail[0]+"   Cur Long : "+routeDetail[1]+"   Cur Lat : "+routeDetail[2]+ " </br>");
+//                out.print("Route Name : "+routeDetail[1]+"   Start : "+routeDetail[2]+"   End : "+routeDetail[3]+ " </br>");
 //            }
+
+
 //
 //        } catch (SQLException ex) {
 //            Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex);

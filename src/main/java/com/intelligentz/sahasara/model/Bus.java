@@ -13,7 +13,15 @@ public class Bus {
     private City lastDestination;
     private String busRouteId;
     // 1 - on,  0 - off
+    private Schedule schedule;
 
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
 
     public Bus() {
     }
