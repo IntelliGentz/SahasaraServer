@@ -6,6 +6,6 @@ package com.intelligentz.sahasara.constants;
 public class IdeaBizConstants {
     public static final String MSISDN_PREFIX = "tel:+";
     public static final String SUCCESS_TAG = "SUCCESS";
-    public static final String APP_ID = "773332724";
+    public static final String APP_ID = "769500008";
 
 }

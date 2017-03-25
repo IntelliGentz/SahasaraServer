@@ -5,6 +5,7 @@ import com.intelligentz.sahasara.database.DBHandle;
 import com.intelligentz.sahasara.model.City;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,16 +19,23 @@ public class CityController {
         public static boolean AddCity(City city) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
             String query="INSERT INTO city(CITY_NAME,LONGITUDE,LATITUDE) VALUES(?,?,?)";
             Object data[]={city.getName(),city.getLongitude(),city.getLatitude()};
-            return DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+            Connection connection = DBConnection.getDBConnection().getConnection();
+            boolean status = DBHandle.setData(connection, query, data);
+
+            connection.close();
+            return status;
         }
         
         public static City GetCity(String id) throws ClassNotFoundException, SQLException, IOException, PropertyVetoException {
             String query ="SELECT * FROM city WHERE CITY_ID = ?";
             Object[] data={id};
-            ResultSet resultSet= DBHandle.getData(DBConnection.getDBConnection().getConnection(), query,data);
+            Connection connection = DBConnection.getDBConnection().getConnection();
+            ResultSet resultSet= DBHandle.getData(connection, query,data);
+            City  city = null;
             if(resultSet.next()){
-                return new City(resultSet.getInt("CITY_ID"),resultSet.getString("CITY_NAME"),resultSet.getDouble("LONGITUDE"),resultSet.getDouble("LATITUDE"));
+                city = new City(resultSet.getInt("CITY_ID"),resultSet.getString("CITY_NAME"),resultSet.getDouble("LONGITUDE"),resultSet.getDouble("LATITUDE"));
             }
-            return null;
+            connection.close();
+            return city;
         }
 }
