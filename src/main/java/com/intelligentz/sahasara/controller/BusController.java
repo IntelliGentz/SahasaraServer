@@ -11,6 +11,7 @@ import com.intelligentz.sahasara.database.DBHandle;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.handler.DeviceHandler;
 import com.intelligentz.sahasara.model.Bus;
+import com.intelligentz.sahasara.model.Schedule;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -24,12 +25,12 @@ import java.util.Vector;
  */
 public class BusController {
     
-    public static List<Object[]> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
+    public static List<Bus> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
         String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
         Object[] data = new Object[]{routeName};
         ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query, data);
 
-        List<Object[]> busList = new ArrayList<Object[]>();
+        List<Bus> busList = new ArrayList<>();
         while (resultSet.next()) {
             String busId = resultSet.getString(1);
             String busName = resultSet.getString(2);
@@ -37,7 +38,7 @@ public class BusController {
             double busLat = resultSet.getDouble(4);
 
             if(DistanceCalculator.isAtRange(busLat, busLon, latitude, longitude, 2))
-                busList.add(new Object[]{busName,busLon,busLat});
+                busList.add(new Bus(busName,busLon,busLat));
         }
         return busList;
     }
@@ -45,7 +46,25 @@ public class BusController {
     public static boolean addNewBus(Bus bus) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
         String query="INSERT INTO bus(BUS_NAME,BUS_NO,ROUTE_ID,STATE,LAST_DESTINATION,CURRENT_TIMESTAMP,CURRENT_LONGITUDE,CURRENT_LATITUDE) VALUES(?,?,?,?,?,?,?,?)";
         Object data[]={bus.getName(),bus.getNumber(),bus.getBusRouteId(),bus.getState(),bus.getLastDestination().getId(),bus.getLongitude(),bus.getLatitude()};
-        return DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+        boolean res = DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+        if(res){
+            String query2 ="SELECT BUS_ID FROM bus WHERE BUS_NO = ?";
+            Object[] data2={bus.getNumber()};
+            
+            ResultSet resultSet2= DBHandle.getData(DBConnection.getDBConnection().getConnection(), query,data);
+            if(resultSet2.next()){
+                int busId = resultSet2.getInt(1);
+                
+                String query3="INSERT INTO schedule(BUS_ID) VALUES(?)";
+                Object data3[]={busId};
+                boolean res3 = DBHandle.setData(DBConnection.getDBConnection().getConnection(), query, data);
+                if(res3){
+                    return true;
+                }
+            }
+        }
+        return false;
+        
     }
     
     public static boolean isAvailable(String id) throws ClassNotFoundException, SQLException, IOException, PropertyVetoException {
@@ -70,10 +89,14 @@ public class BusController {
                     
                     
                     String busName = deviceObject.get("name").getAsString();
-                    String[] busNameArray = busName.split(" ");
-                    String busRouteName = busNameArray[1];
+                    String[] busNameArray = busName.split(",");
+                    String busRouteName = null;
+                    if (busNameArray.length > 1 ) {
+                        busRouteName = busNameArray[1].trim();
+                    }
+                    //
                     bus.setBusRouteId(RouteController.getRouteId(busRouteName));
-                    
+
                     int state = 1;
                     if(deviceObject.get("state").getAsString().equals("off")){
                         state = 0;
@@ -84,12 +107,14 @@ public class BusController {
                     bus.setLongitude(deviceObject.get("lon").getAsDouble());
                     bus.setLatitude(deviceObject.get("lat").getAsDouble());
                     
-                    // TODO : bus.setLastDestination  
+                    // TODO : bus.setLastDestination
+                    
+                    addNewBus(bus);
                 }
             }
         }
     }
-    
+
     public static boolean updateBusLocations() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException{
         String query="SELECT BUS_NO FROM bus";
         ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query);
@@ -97,27 +122,39 @@ public class BusController {
         while(resultSet.next()){
             String busNo = resultSet.getString(1);
             String response = new DeviceHandler().getDeviceLocation(IdeaBizConstants.APP_ID,busNo);
-            
+
             JsonParser parser = new JsonParser();
             JsonArray deviceListJson = (JsonArray) parser.parse(response);
             JsonElement deviceElement = deviceListJson.get(0);
 
             JsonObject deviceObject = deviceElement.getAsJsonObject();
-            
+
             String timeStamp = deviceObject.get("timestamp").getAsString();
             double lon = deviceObject.get("lon").getAsDouble();
             double lat = deviceObject.get("lat").getAsDouble();
-            
+
             String query2="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
             Object data[]={timeStamp,lon,lat,busNo};
-            
-            boolean status =DBHandle.setData(DBConnection.getDBConnection().getConnection(),query,data); 
-            
+
+            boolean status =DBHandle.setData(DBConnection.getDBConnection().getConnection(),query,data);
+
             if(!status){
                 return false;
             }
-            
+
         }
         return true;
     }
-}
+
+    public static List<String> getAllBusNumbers() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException {
+        String query = "SELECT BUS_NO FROM bus";
+        ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query);
+
+        List<String> busNos = new ArrayList<>();
+        while (resultSet.next()) {
+            busNos.add(resultSet.getString(1));
+        }
+        return busNos;
+    }
+
+        }

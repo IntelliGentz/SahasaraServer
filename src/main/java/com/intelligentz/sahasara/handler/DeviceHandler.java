@@ -12,14 +12,18 @@ import com.google.gson.JsonParser;
 import com.intelligentz.sahasara.constants.AuthorizationTypes;
 import com.intelligentz.sahasara.constants.ContentTypes;
 import com.intelligentz.sahasara.constants.URLs;
+import com.intelligentz.sahasara.controller.BusController;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.model.Bus;
 import com.intelligentz.sahasara.model.ideabiz.RequestMethod;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.StringMatchFilter;
 
+import java.beans.PropertyVetoException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -40,22 +44,32 @@ public class DeviceHandler {
 
             response+="\n......\n Request: ";
         }
-        JsonParser parser = new JsonParser();
-        JsonArray deviceListJson = (JsonArray) parser.parse(response);
-        ArrayList<Bus> busList = new ArrayList<>();
-         Bus bus;
-        for (JsonElement deviceElement : deviceListJson){
-            JsonObject deviceObject = deviceElement.getAsJsonObject();
-            String busName = deviceObject.get("name").getAsString();
-            String[] busNameArray = busName.split(" ");
-            String busRouteId = busNameArray[1];
-            bus = new Bus();
-            bus.setNumber(deviceObject.get("number").getAsString());
-            bus.setName(busName);
-            bus.setBusRouteId(busRouteId);
-            busList.add(bus);
-        }
-
+//        JsonParser parser = new JsonParser();
+//        JsonArray deviceListJson = (JsonArray) parser.parse(response);
+//        ArrayList<Bus> busList = new ArrayList<>();
+//         Bus bus;
+//        for (JsonElement deviceElement : deviceListJson){
+//            JsonObject deviceObject = deviceElement.getAsJsonObject();
+//            String busName = deviceObject.get("name").getAsString();
+//            String[] busNameArray = busName.split(",");
+//            String busRouteId = busNameArray[1].trim();
+//            bus = new Bus();
+//            bus.setNumber(deviceObject.get("number").getAsString());
+//            bus.setName(busName);
+//            bus.setBusRouteId(busRouteId);
+//            busList.add(bus);
+//        }
+//        try {
+//            BusController.checkAndUpdateNewBusses(busList);
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (PropertyVetoException e) {
+//            e.printStackTrace();
+//        }
         return response;
     }
     public String getDeviceLocation(String app_id, String bus_id) throws IdeabizException{
@@ -70,7 +84,7 @@ public class DeviceHandler {
         }
         return response;
     }
-    public String subscribeForUpdates(String app_id, ArrayList<String> bus_id_list, int interval, String callBackUrl) throws IdeabizException{
+    public String subscribeForUpdates(String app_id, ArrayList<String> bus_id_list, int interval) throws IdeabizException{
         String body = "?interval="+ String.valueOf(interval);
         body += "&callbackUrl=";
         try {

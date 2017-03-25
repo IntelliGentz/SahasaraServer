@@ -44,7 +44,6 @@ package com.intelligentz.sahasara.database;
 //
 //    }
 //=======
-import constants.DatabaseConstants;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.Connection;
@@ -52,6 +51,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import com.intelligentz.sahasara.constants.DatabaseConstants;
 
 /**
  *

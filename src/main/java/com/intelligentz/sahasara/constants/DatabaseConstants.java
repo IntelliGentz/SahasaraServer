@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package constants;
+package com.intelligentz.sahasara.constants;
 
 public class DatabaseConstants {
     public static  final String DB_URL= "jdbc:mysql://localhost:3306/";
@@ -12,7 +12,7 @@ public class DatabaseConstants {
     
     public static  final String DB_NAME = "sahasara_db";
     public static  final String USERNAME = "root";
-    public static  final String PASSWORD = "12345";
+    public static  final String PASSWORD = "luckygrox";
     
     
 }
