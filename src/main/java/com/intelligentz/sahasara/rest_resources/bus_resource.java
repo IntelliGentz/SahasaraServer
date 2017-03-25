@@ -122,5 +122,21 @@ public class bus_resource {
         return Response.status(Response.Status.OK).entity("Error").build();
     }
 
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @GET
+    @Path("{app_id}/subupdate/")
+    public Response subscribeForProximityAlert( @PathParam("app_id") String app_id ) {
+        String result = "";
+        if (app_id.equals("*")){
+            app_id = IdeaBizConstants.APP_ID;
+        }
+        try {
+            result = new DeviceHandler().subscribeForProximityAlert(app_id);
+        } catch (IdeabizException e) {
+            logger.error("Ideabiz error:" + e.getMessage());
+        }
+        return Response.status(Response.Status.OK).entity(result).build();
+    }
 
 }

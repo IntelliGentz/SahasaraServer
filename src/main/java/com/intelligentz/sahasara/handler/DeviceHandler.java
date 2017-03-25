@@ -106,6 +106,24 @@ public class DeviceHandler {
         return response;
     }
 
+    public String subscribeForProximityAlert(String app_id) throws IdeabizException{
+        String body = "?callbackUrl=";
+        try {
+            body += URLEncoder.encode(URLs.SUBSCRIBER_PROXIMITY_ALERT_RECEIVING_URL, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        logger.info("Subscibing for proximity :");
+        String URL = URLs.SUBSCRIBE_FOR_PROXIMITY_ALERT_URL + app_id + body;
+        System.out.println("URL:" + URL);
+        String response = new IdeaBizAPIHandler().sendAPICall(URL, RequestMethod.POST, "{}","", ContentTypes.TYPE_FORM_URL_ENCODED,ContentTypes.TYPE_JSON, AuthorizationTypes.TYPE_BEARER);
+        logger.info("Subscribe update Response :"+ response);
+        if (response.contains("requestError")){
+            response+="\n......\n Request: ";
+        }
+        return response;
+    }
+
     private String getListAsAString(ArrayList<String> bus_id_list) {
         String listString = "";
         for (String bus_id : bus_id_list) {
