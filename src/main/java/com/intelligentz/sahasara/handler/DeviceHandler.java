@@ -44,32 +44,35 @@ public class DeviceHandler {
 
             response+="\n......\n Request: ";
         }
-//        JsonParser parser = new JsonParser();
-//        JsonArray deviceListJson = (JsonArray) parser.parse(response);
-//        ArrayList<Bus> busList = new ArrayList<>();
-//         Bus bus;
-//        for (JsonElement deviceElement : deviceListJson){
-//            JsonObject deviceObject = deviceElement.getAsJsonObject();
-//            String busName = deviceObject.get("name").getAsString();
-//            String[] busNameArray = busName.split(",");
-//            String busRouteId = busNameArray[1].trim();
-//            bus = new Bus();
-//            bus.setNumber(deviceObject.get("number").getAsString());
-//            bus.setName(busName);
-//            bus.setBusRouteId(busRouteId);
-//            busList.add(bus);
-//        }
-//        try {
-//            BusController.checkAndUpdateNewBusses(busList);
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (PropertyVetoException e) {
-//            e.printStackTrace();
-//        }
+        JsonParser parser = new JsonParser();
+        JsonArray deviceListJson = (JsonArray) parser.parse(response);
+        ArrayList<Bus> busList = new ArrayList<>();
+         Bus bus;
+        for (JsonElement deviceElement : deviceListJson){
+            JsonObject deviceObject = deviceElement.getAsJsonObject();
+            String busName = deviceObject.get("name").getAsString();
+            String[] busNameArray = busName.split(",");
+            String busRouteId = null;
+            if (busNameArray.length > 1) {
+                busRouteId = busNameArray[1].trim();
+            }
+            bus = new Bus();
+            bus.setNumber(deviceObject.get("number").getAsString());
+            bus.setName(busName);
+            bus.setBusRouteId(busRouteId);
+            busList.add(bus);
+        }
+        try {
+            BusController.checkAndUpdateNewBusses(busList);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
         return response;
     }
     public String getDeviceLocation(String app_id, String bus_id) throws IdeabizException{

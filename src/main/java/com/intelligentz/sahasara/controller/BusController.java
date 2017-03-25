@@ -86,30 +86,32 @@ public class BusController {
 
                 for (JsonElement deviceElement : deviceListJson){
                     JsonObject deviceObject = deviceElement.getAsJsonObject();
-                    
-                    
-                    String busName = deviceObject.get("name").getAsString();
-                    String[] busNameArray = busName.split(",");
-                    String busRouteName = null;
-                    if (busNameArray.length > 1 ) {
-                        busRouteName = busNameArray[1].trim();
-                    }
+//
+//
+//                    String busName = deviceObject.get("name").getAsString();
+//                    String[] busNameArray = busName.split(",");
+//                    String busRouteName = null;
+//                    if (busNameArray.length > 1 ) {
+//                        busRouteName = busNameArray[1].trim();
+//                    }
                     //
-                    bus.setBusRouteId(RouteController.getRouteId(busRouteName));
+                    if (bus.getBusRouteId() != null) {
+                        bus.setBusRouteId(RouteController.getRouteId(bus.getBusRouteId()));
 
-                    int state = 1;
-                    if(deviceObject.get("state").getAsString().equals("off")){
-                        state = 0;
+                        int state = 1;
+                        if (deviceObject.get("state").getAsString().equals("off")) {
+                            state = 0;
+                        }
+                        bus.setState(state);
+
+                        bus.setTime(deviceObject.get("timestamp").getAsString());
+                        bus.setLongitude(deviceObject.get("lon").getAsDouble());
+                        bus.setLatitude(deviceObject.get("lat").getAsDouble());
+
+                        // TODO : bus.setLastDestination
+
+                        addNewBus(bus);
                     }
-                    bus.setState(state);
-                    
-                    bus.setTime(deviceObject.get("timestamp").getAsString());
-                    bus.setLongitude(deviceObject.get("lon").getAsDouble());
-                    bus.setLatitude(deviceObject.get("lat").getAsDouble());
-                    
-                    // TODO : bus.setLastDestination
-                    
-                    addNewBus(bus);
                 }
             }
         }
