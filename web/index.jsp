@@ -106,7 +106,7 @@
                                     }
                                     function selectRoute(e){
                                         var val = e.value;
-                                        window.location.assign("./index.jsp?route="+val+"&value="+e.text);
+                                        return window.location.assign("./index.jsp?route="+val+"&value="+e.text);
                                     }
                                 </script>
 
