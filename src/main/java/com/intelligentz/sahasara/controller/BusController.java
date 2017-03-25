@@ -70,10 +70,13 @@ public class BusController {
                     
                     
                     String busName = deviceObject.get("name").getAsString();
-                    String[] busNameArray = busName.split(" ");
-                    String busRouteName = busNameArray[1];
+                    String[] busNameArray = busName.split(",");
+                    String busRouteName = null;
+                    if (busNameArray.length > 1 ) {
+                        busRouteName = busNameArray[1].trim();
+                    }
                     bus.setBusRouteId(RouteController.getRouteId(busRouteName));
-                    
+
                     int state = 1;
                     if(deviceObject.get("state").getAsString().equals("off")){
                         state = 0;
@@ -84,7 +87,8 @@ public class BusController {
                     bus.setLongitude(deviceObject.get("lon").getAsDouble());
                     bus.setLatitude(deviceObject.get("lat").getAsDouble());
                     
-                    // TODO : bus.setLastDestination  
+                    // TODO : bus.setLastDestination
+                    addNewBus(bus);
                 }
             }
         }
@@ -120,4 +124,16 @@ public class BusController {
         }
         return true;
     }
-}
+
+    public static List<String> getAllBusNumbers() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException {
+        String query = "SELECT BUS_NO FROM bus";
+        ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query);
+
+        List<String> busNos = new ArrayList<>();
+        while (resultSet.next()) {
+            busNos.add(resultSet.getString(1));
+        }
+        return busNos;
+    }
+
+        }

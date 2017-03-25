@@ -67,11 +67,19 @@ public class bus_resource {
         if (app_id.equals("*")){
             app_id = IdeaBizConstants.APP_ID;
         }
-//        try {
-//            result = new DeviceHandler().getDeviceLocation(app_id, bus_id);
-//        } catch (IdeabizException e) {
-//            logger.error("Ideabiz error:"+e.getMessage());
-//        }
+        try {
+            result = new DeviceHandler().subscribeForUpdates(app_id, (ArrayList<String>) BusController.getAllBusNumbers(), 60);
+        } catch (IdeabizException e) {
+            logger.error("Ideabiz error:"+e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return Response.status(Response.Status.OK).entity(result).build();
     }
 
