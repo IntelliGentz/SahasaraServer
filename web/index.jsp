@@ -37,7 +37,7 @@
         <br>
             <%
                 if(request.getParameter("route")!=null){
-                    out.println("<center><p> <b>Route</b> : <i>"+request.getParameter("route")+"</i></p></center>");
+                    out.println("<center><p> <b>Route</b> : <i>"+request.getParameter("value")+"</i></p></center>");
                 }
             %>
         <div class="row">
@@ -106,7 +106,7 @@
                                     }
                                     function selectRoute(e){
                                         var val = e.value;
-                                        window.location.assign("./index.jsp?route="+val);
+                                        return window.location.assign("./index.jsp?route="+val+"&value="+e.text);
                                     }
                                 </script>
 
