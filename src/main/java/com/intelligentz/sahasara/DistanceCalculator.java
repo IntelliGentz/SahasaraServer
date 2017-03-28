@@ -17,7 +17,7 @@ public class DistanceCalculator {
 //        System.out.println(lon1);
 //        System.out.println(lat2);
 //        System.out.println(lon2);
-        return (distance(lat1, lon1, lat2, lon2, 'K')< 100);
+        return (distance(lat1, lon1, lat2, lon2, 'K')< km);
     }
     
     public static final double distance(double lat1, double lon1, double lat2, double lon2, char unit)
