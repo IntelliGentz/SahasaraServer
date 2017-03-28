@@ -143,6 +143,7 @@ public class BusController {
         }
     }
 
+    // update all busses locations
     public static boolean updateBusLocations() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException{
         String query="SELECT BUS_NO FROM bus";
         Connection connection = DBConnection.getDBConnection().getConnection();
@@ -166,9 +167,9 @@ public class BusController {
             double lat = deviceObject.get("lat").getAsDouble();
 
             String query2="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
-            Object data[]={timeStamp,lon,lat,busNo};
+            Object data2[]={timeStamp,lon,lat,busNo};
 
-            status2 =DBHandle.setData(connection,query,data);
+            status2 =DBHandle.setData(connection,query2,data2);
 
             if(!status2){
                 break;
@@ -176,6 +177,25 @@ public class BusController {
         }
         connection.close();
         return status & status2;
+    }
+    
+    // when specific busses given
+    public static boolean updateBusLocations(List<Bus> busses) throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException{
+        Connection connection = DBConnection.getDBConnection().getConnection();
+        boolean status = false;
+
+        for(Bus bus : busses){
+            String query="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
+            Object data[]={bus.getTime(),bus.getLongitude(),bus.getLatitude(),bus.getName()};
+
+            status =DBHandle.setData(connection,query,data);
+
+            if(!status){
+                break;
+            }            
+        }
+        connection.close();
+        return status;
     }
 
     public static List<String> getAllBusNumbers() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException {
