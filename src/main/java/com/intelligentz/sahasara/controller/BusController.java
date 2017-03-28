@@ -14,6 +14,7 @@ import com.intelligentz.sahasara.model.Bus;
 import com.intelligentz.sahasara.model.Schedule;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -117,7 +118,8 @@ public class BusController {
 
     public static boolean updateBusLocations() throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException{
         String query="SELECT BUS_NO FROM bus";
-        ResultSet resultSet = DBHandle.getData(DBConnection.getDBConnection().getConnection(), query);
+        Connection connection = DBConnection.getDBConnection().getConnection();
+        ResultSet resultSet = DBHandle.getData(connection, query);
 
         while(resultSet.next()){
             String busNo = resultSet.getString(1);
@@ -136,9 +138,10 @@ public class BusController {
             String query2="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
             Object data[]={timeStamp,lon,lat,busNo};
 
-            boolean status =DBHandle.setData(DBConnection.getDBConnection().getConnection(),query,data);
+            boolean status =DBHandle.setData(connection,query,data);
 
             if(!status){
+                connection.close();
                 return false;
             }
 
@@ -157,4 +160,11 @@ public class BusController {
         return busNos;
     }
 
-        }
+    public static boolean updateLastDestination(String busNo,int cityId) throws IOException, SQLException, PropertyVetoException{
+            Connection connection = DBConnection.getDBConnection().getConnection();
+            String query ="UPDATE bus SET LAST_DESTINATION=? WHERE BUS_NO=?";
+            Object data[]={cityId,busNo};
+            boolean status = DBHandle.setData(connection,query,data);
+            return status;
+    }
+}
