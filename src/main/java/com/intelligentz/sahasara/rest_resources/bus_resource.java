@@ -156,7 +156,7 @@ public class bus_resource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @GET
-    @Path("{app_id}/proxupdate/")
+    @Path("{app_id}/subproximity/")
     public Response subscribeForProximityAlert( @PathParam("app_id") String app_id ) {
         String result = "";
         if (app_id.equals("*")){

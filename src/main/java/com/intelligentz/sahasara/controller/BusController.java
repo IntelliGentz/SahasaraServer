@@ -180,7 +180,7 @@ public class BusController {
     }
     
     // when specific busses given
-    public static boolean updateBusLocations(List<Bus> busses) throws ClassNotFoundException, SQLException, IdeabizException, IOException, PropertyVetoException{
+    public static boolean updateBusLocations(List<Bus> busses) throws ClassNotFoundException, SQLException, IOException, PropertyVetoException{
         Connection connection = DBConnection.getDBConnection().getConnection();
         boolean status = false;
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.intelligentz.sahasara.constants.IdeaBizConstants;
+import com.intelligentz.sahasara.controller.BusController;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.handler.DeviceHandler;
 import com.intelligentz.sahasara.model.Bus;
@@ -12,6 +13,9 @@ import org.apache.log4j.Logger;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +32,7 @@ public class Alert_Resource {
     @POST
     @Path("subupdate/")
     public void getBusList(String request) {
-        JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
+        /*JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
         Iterable<?> keys = jsonObject.entrySet();
         Map<String, Object> attributes = new HashMap<String, Object>();
         Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
@@ -45,6 +49,18 @@ public class Alert_Resource {
             bus.setState(Integer.parseInt(value.get("state").getAsString()));
             busList.add(bus);
         }
+
+        try {
+            BusController.updateBusLocations(busList);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }*/
         //System.out.println("ALERT =========" + System.currentTimeMillis() + "============= :"+request);
     }
 
