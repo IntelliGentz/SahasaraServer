@@ -23,6 +23,6 @@ public class Alert_Resource {
     @Path("subupdate/")
     public void getBusList(String request) {
         JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
-        System.out.println("ALERT ====================== :"+request);
+        System.out.println("ALERT =========" + System.currentTimeMillis() + "============= :"+request);
     }
 }

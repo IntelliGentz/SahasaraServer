@@ -67,6 +67,13 @@ public class bus_resource {
         if (app_id.equals("*")){
             app_id = IdeaBizConstants.APP_ID;
         }
+//        ArrayList<String> deviced = new ArrayList<>();
+//        deviced.add("766426526");
+//        deviced.add("766426174");
+//        deviced.add("766426334");
+//        deviced.add("766426176");
+//        deviced.add("768511580");
+//        deviced.add("765140331");
         try {
             result = new DeviceHandler().subscribeForUpdates(app_id, (ArrayList<String>) BusController.getAllBusNumbers(), 60);
         } catch (IdeabizException e) {

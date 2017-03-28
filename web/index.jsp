@@ -27,7 +27,7 @@
 		<h2 class="text-center">iLocate Bus schedule table</h2>
 	</div>
     
-        <select style="width:20%; position:absolute; left: 40%;" class="form-control input-sm" >
+        <select style="width:20%; position:absolute; left: 40%;" class="form-control input-sm" onchange="this.options[this.selectedIndex].onclick()">
             <option>Select the route</option>
             <%
                     out.println(GetData.getRouteData());
@@ -83,7 +83,7 @@
                                                     
 					</tbody>
 				</table>
-                                <script>
+                                <script language="JavaScript" type="text/javascript">
                                     
                                     function sendResponse(device_id, week_id, element) {
                                         var xhttp = new XMLHttpRequest();
@@ -96,7 +96,8 @@
                                             else{
                                                 alert('Failed to update status');
                                                 element.checked = State? false: true;
-                                                window.location.assign("./index.jsp?route="+request.getParameter("route"));
+                                                var url = "index.jsp?route="+request.getParameter("route");
+                                                window.parent.location.assign (url);
                                                 return false;
                                             }
                                           }
@@ -106,7 +107,9 @@
                                     }
                                     function selectRoute(e){
                                         var val = e.value;
-                                        return window.location.assign("./index.jsp?route="+val+"&value="+e.text);
+                                        var url1 = "index.jsp?route="+val+"&value="+e.text;
+                                        window.parent.location.assign (url1);
+                                        return true;
                                     }
                                 </script>
 
