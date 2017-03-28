@@ -26,7 +26,7 @@
 	<div class="row">
 		<h2 class="text-center">iLocate Bus schedule table</h2>
 	</div>
-    
+        <!--iDisplayLength:10  change this to change the default value of table -->
         <select style="width:20%; position:absolute; left: 40%;" class="form-control input-sm" onchange="this.options[this.selectedIndex].onclick()">
             <option>Select the route</option>
             <%
@@ -48,40 +48,12 @@
                 
            
 <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-    				<thead>
-						<tr>
-							<th>Device</th>
-							<th>MON</th>
-							<th>TUE</th>
-							<th>WED</th>
-							<th>THU</th>
-							<th>FRI</th>
-							<th>SAT</th>
-							<th>SUN</th>
-						</tr>
-					</thead>
-
-					<tfoot>
-						<tr>
-							<th>Device</th>
-							<th>MON</th>
-							<th>TUE</th>
-							<th>WED</th>
-							<th>THU</th>
-							<th>FRI</th>
-							<th>SAT</th>
-							<th>SUN</th>
-						</tr>
-					</tfoot>
-
-					<tbody>
+    				
 						<%
                                                     if(request.getParameter("route") != null){
                                                         out.println(GetData.getDeviceData(request.getParameter("route")));
                                                     }
                                                 %>
-                                                    
-					</tbody>
 				</table>
                                 <script language="JavaScript" type="text/javascript">
                                     
