@@ -44,7 +44,7 @@ public class RouteController {
         }else{
             // when the route name is not existing, it will be added
             String query2="INSERT INTO route(ROUTE_NAME, ROUTE_CLUSTER, START, END) VALUES(?,?, ?,?)";
-            Object data2[]={routeName,1, 1, 1};
+            Object data2[]={routeName,1, 406, 407};
             boolean status = DBHandle.setData(connection, query2, data2);
             if(status){
                 String query3 ="SELECT ROUTE_ID FROM route WHERE ROUTE_NAME = ?";
