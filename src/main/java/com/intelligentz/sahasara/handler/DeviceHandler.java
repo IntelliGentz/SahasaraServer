@@ -13,8 +13,10 @@ import com.intelligentz.sahasara.constants.AuthorizationTypes;
 import com.intelligentz.sahasara.constants.ContentTypes;
 import com.intelligentz.sahasara.constants.URLs;
 import com.intelligentz.sahasara.controller.BusController;
+import com.intelligentz.sahasara.controller.CityController;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.model.Bus;
+import com.intelligentz.sahasara.model.City;
 import com.intelligentz.sahasara.model.ideabiz.RequestMethod;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.StringMatchFilter;
@@ -184,6 +186,36 @@ public class DeviceHandler {
         if (response.contains("requestError")) {
 
             response += "\n......\n Request: ";
+        }
+
+        JsonParser parser = new JsonParser();
+        JsonArray locationListJson = (JsonArray) parser.parse(response);
+        ArrayList<City> locationList = new ArrayList<>();
+        City city;
+        for (JsonElement locationElement : locationListJson){
+            JsonObject locationObject = locationElement.getAsJsonObject();
+            String locationId = locationObject.get("locationId").getAsString();
+            String locationName = locationObject.get("locationName").getAsString();
+            double lon = Double.valueOf(locationObject.get("lon").getAsString());
+            double lat = Double.valueOf(locationObject.get("lat").getAsString());
+
+            city = new City();
+            city.setId(Integer.parseInt(locationId));
+            city.setName(locationName);
+            city.setLongitude(lon);
+            city.setLatitude(lat);
+            locationList.add(city);
+        }
+        try {
+            CityController.AddCityList(locationList);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
         }
         return response;
     }

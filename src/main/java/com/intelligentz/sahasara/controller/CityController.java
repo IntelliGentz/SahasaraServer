@@ -38,4 +38,18 @@ public class CityController {
             connection.close();
             return city;
         }
+
+        public static boolean AddCityList(ArrayList<City> cityList) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
+            String query="INSERT INTO city(CITY_ID,CITY_NAME,LONGITUDE,LATITUDE) VALUES(?,?,?,?)";
+            Connection connection = DBConnection.getDBConnection().getConnection();
+            boolean status = false;
+            for (City city : cityList) {
+                Object data[]={city.getId(), city.getName(),city.getLongitude(),city.getLatitude()};
+                status = DBHandle.setData(connection, query, data);
+            }
+
+            connection.close();
+            return status;
+        }
+
 }
