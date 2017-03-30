@@ -61,7 +61,7 @@ public class BusController {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-        Object data[]={bus.getName(),bus.getNumber(),bus.getBusRouteId(),bus.getState(),bus.getLastDestination(),bus.getLongitude(),bus.getLatitude(),bus.getTime()};
+        Object data[]={bus.getName(),bus.getNumber(),bus.getBusRouteId(),bus.getState(),406,bus.getLongitude(),bus.getLatitude(),bus.getTime()};
         Connection connection = DBConnection.getDBConnection().getConnection();
         boolean res = DBHandle.setData(connection, query, data);
         if(res){
