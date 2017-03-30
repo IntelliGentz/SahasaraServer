@@ -13,8 +13,10 @@ import com.intelligentz.sahasara.constants.AuthorizationTypes;
 import com.intelligentz.sahasara.constants.ContentTypes;
 import com.intelligentz.sahasara.constants.URLs;
 import com.intelligentz.sahasara.controller.BusController;
+import com.intelligentz.sahasara.controller.CityController;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.model.Bus;
+import com.intelligentz.sahasara.model.City;
 import com.intelligentz.sahasara.model.ideabiz.RequestMethod;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.StringMatchFilter;
@@ -136,4 +138,105 @@ public class DeviceHandler {
     }
 
 
+    public String unsubscribeForUpdates(String app_id)throws IdeabizException {
+        logger.info("Subscibing for updates :");
+        String URL = URLs.UNSUBSCRIBE_FOR_UPDATES_URL + app_id;
+        System.out.println("URL:" + URL);
+        String response = new IdeaBizAPIHandler().sendAPICall(URL, RequestMethod.POST, "{}", "", ContentTypes.TYPE_FORM_URL_ENCODED, ContentTypes.TYPE_JSON, AuthorizationTypes.TYPE_BEARER);
+        logger.info("Subscribe update Response :" + response);
+        if (response.contains("requestError")) {
+
+            response += "\n......\n Request: ";
+        }
+        return response;
+    }
+
+    public String adProximityLocation(String app_id, String locationName, double lat, double lon, double radius) throws IdeabizException {
+        String body = "?locationName=";
+        try {
+            body +=  URLEncoder.encode(locationName, "UTF-8");
+            body += "&lat=";
+            body +=  URLEncoder.encode(String.valueOf(lat), "UTF-8");
+            body += "&lon=";
+            body +=  URLEncoder.encode(String.valueOf(lon), "UTF-8");
+            body += "&radius=";
+            body +=  URLEncoder.encode(String.valueOf(radius), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        logger.info("adding proximity location :");
+        String URL = URLs.ADD_PROXIMITY_LOCATION_URL + app_id + body;
+        System.out.println("URL:" + URL);
+        String response = new IdeaBizAPIHandler().sendAPICall(URL, RequestMethod.POST, "{}","", ContentTypes.TYPE_FORM_URL_ENCODED,ContentTypes.TYPE_JSON, AuthorizationTypes.TYPE_BEARER);
+        logger.info("Subscribe update Response :"+ response);
+        if (response.contains("requestError")){
+
+            response+="\n......\n Request: ";
+        }
+        return response;
+    }
+
+    public String getProximityLocation(String app_id) throws IdeabizException {
+        logger.info("Subscibing for updates :");
+        String URL = URLs.GET_PROXIMITY_LOCATIONS_URL + app_id;
+        System.out.println("URL:" + URL);
+        String response = new IdeaBizAPIHandler().sendAPICall(URL, RequestMethod.POST, "{}", "", ContentTypes.TYPE_FORM_URL_ENCODED, ContentTypes.TYPE_JSON, AuthorizationTypes.TYPE_BEARER);
+        logger.info("Subscribe update Response :" + response);
+        if (response.contains("requestError")) {
+
+            response += "\n......\n Request: ";
+        }
+
+        JsonParser parser = new JsonParser();
+        JsonArray locationListJson = (JsonArray) parser.parse(response);
+        ArrayList<City> locationList = new ArrayList<>();
+        City city;
+        for (JsonElement locationElement : locationListJson){
+            JsonObject locationObject = locationElement.getAsJsonObject();
+            String locationId = locationObject.get("locationId").getAsString();
+            String locationName = locationObject.get("locationName").getAsString();
+            double lon = Double.valueOf(locationObject.get("lon").getAsString());
+            double lat = Double.valueOf(locationObject.get("lat").getAsString());
+
+            city = new City();
+            city.setId(Integer.parseInt(locationId));
+            city.setName(locationName);
+            city.setLongitude(lon);
+            city.setLatitude(lat);
+            locationList.add(city);
+        }
+        try {
+            CityController.AddCityList(locationList);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    public String deleteProximityLocation(String app_id, String locationId) throws IdeabizException {
+        String body = "?locationId=";
+        try {
+            body +=  URLEncoder.encode(locationId, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        logger.info("adding proximity location :");
+        String URL = URLs.DELETE_PROXIMITY_LOCATION_URL + app_id + body;
+        System.out.println("URL:" + URL);
+        String response = new IdeaBizAPIHandler().sendAPICall(URL, RequestMethod.POST, "{}","", ContentTypes.TYPE_FORM_URL_ENCODED,ContentTypes.TYPE_JSON, AuthorizationTypes.TYPE_BEARER);
+        logger.info("Subscribe update Response :"+ response);
+        if (response.contains("requestError")){
+
+            response+="\n......\n Request: ";
+        }
+        return response;
+    }
 }
