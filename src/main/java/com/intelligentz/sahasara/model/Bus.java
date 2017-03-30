@@ -10,10 +10,11 @@ public class Bus {
     private double longitude;
     private double latitude;
     private int state;
-    private City lastDestination;
+    private int lastDestination;
     private String busRouteId;
     // 1 - on,  0 - off
     private Schedule schedule;
+    
 
     public Schedule getSchedule() {
         return schedule;
@@ -32,7 +33,7 @@ public class Bus {
         this.latitude = latitude;
     }
 
-    public Bus(String name, String number, String time, double longitude, double latitude, int state, City lastDestination) {
+    public Bus(String name, String number, String time, double longitude, double latitude, int state, int lastDestination) {
         this.name = name;
         this.number = number;
         this.time = time;
@@ -42,7 +43,7 @@ public class Bus {
         this.lastDestination = lastDestination;
     }
 
-    public Bus(String name, String number, String time, double longitude, double latitude, int state, City lastDestination, String busRouteId) {
+    public Bus(String name, String number, String time, double longitude, double latitude, int state, int lastDestination, String busRouteId) {
         this.name = name;
         this.number = number;
         this.time = time;
@@ -52,6 +53,8 @@ public class Bus {
         this.lastDestination = lastDestination;
         this.busRouteId = busRouteId;
     }
+
+
 
     public String getName() {
         return name;
@@ -109,11 +112,11 @@ public class Bus {
         this.state = state;
     }
 
-    public City getLastDestination() {
+    public int getLastDestination() {
         return lastDestination;
     }
 
-    public void setLastDestination(City lastDestination) {
+    public void setLastDestination(int lastDestination) {
         this.lastDestination = lastDestination;
     }
 }

@@ -11,8 +11,10 @@ public class DatabaseConstants {
     public static  final String DRIVER = "com.mysql.jdbc.Driver";
     
     public static  final String DB_NAME = "dinethe1016_db";
-    public static  final String USERNAME = "dinethe1016";
-    public static  final String PASSWORD = "D!n3T#e";
-    
+//    public static  final String USERNAME = "dinethe1016";
+//    public static  final String PASSWORD = "D!n3T#e";
+//    
+     public static  final String USERNAME = "root";
+    public static  final String PASSWORD = "12345";
     
 }

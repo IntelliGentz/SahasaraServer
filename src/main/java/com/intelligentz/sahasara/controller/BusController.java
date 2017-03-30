@@ -11,7 +11,6 @@ import com.intelligentz.sahasara.database.DBHandle;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.handler.DeviceHandler;
 import com.intelligentz.sahasara.model.Bus;
-import com.intelligentz.sahasara.model.Schedule;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.beans.PropertyVetoException;
@@ -24,15 +23,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by Lakshan on 2017-03-24.
  */
 public class BusController {
     
+    // bus heading direction ?
     public static List<Bus> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
         String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
+       // String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ? AND (STATE = 1)";
         Object[] data = new Object[]{routeName};
         Connection connection =DBConnection.getDBConnection().getConnection();
         ResultSet resultSet = DBHandle.getData(connection, query, data);
@@ -51,16 +51,17 @@ public class BusController {
         return busList;
     }
     
+    // 
     public static boolean addNewBus(Bus bus) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
-        String query="INSERT INTO bus(BUS_NAME,BUS_NO,ROUTE_ID,STATE,LAST_DESTINATION,CURRENT_LONGITUDE,CURRENT_LATITUDE) VALUES(?,?,?,?,?,?,?)";
-        String sDate1=bus.getTime();
-        Date date1 = null;
-        try {
-            date1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sDate1);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Object data[]={bus.getName(),bus.getNumber(),bus.getBusRouteId(),bus.getState(),1,bus.getLongitude(),bus.getLatitude()};
+        String query="INSERT INTO bus(BUS_NAME,BUS_NO,ROUTE_ID,STATE,LAST_DESTINATION,CURRENT_LONGITUDE,CURRENT_LATITUDE,CUR_TIMESTAMP) VALUES(?,?,?,?,?,?,?,?)";
+//        String sDate1=bus.getTime();
+//        Date date1 = null;
+//        try {
+//            date1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sDate1);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        Object data[]={bus.getName(),bus.getNumber(),bus.getBusRouteId(),bus.getState(),bus.getLastDestination(),bus.getLongitude(),bus.getLatitude(),bus.getTime()};
         Connection connection = DBConnection.getDBConnection().getConnection();
         boolean res = DBHandle.setData(connection, query, data);
         if(res){
@@ -216,6 +217,7 @@ public class BusController {
             String query ="UPDATE bus SET LAST_DESTINATION=? WHERE BUS_NO=?";
             Object data[]={cityId,busNo};
             boolean status = DBHandle.setData(connection,query,data);
+            connection.close();
             return status;
     }
 

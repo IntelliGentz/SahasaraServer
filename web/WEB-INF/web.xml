@@ -12,8 +12,19 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+  <servlet-name>B</servlet-name>
+  <servlet-class>B</servlet-class>
+</servlet>
+      
     <servlet-mapping>
         <servlet-name>REST API</servlet-name>
         <url-pattern>/ideabiz/*</url-pattern>
     </servlet-mapping>
+    
+ <servlet-mapping>
+  <servlet-name>B</servlet-name>
+  <url-pattern>/B</url-pattern>
+</servlet-mapping>
+    
 </web-app>
