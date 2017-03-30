@@ -18,9 +18,11 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +33,28 @@ public class BusController {
     
     // bus heading direction ?
     public static List<Bus> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
-        String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
+        
+        // get day
+        String[] week_id = {"mon","tue","wed","thu","fri","sat","sun"};
+        String[] week_id_cap = {"MON","TUE","WED","THU","FRI","SAT","SUN"};
+        DateFormat df = new SimpleDateFormat("MM-dd");
+            
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(cal.getTime());
+        int index = 0;
+        switch(cal.get(Calendar.DAY_OF_WEEK)){
+            case Calendar.MONDAY: index = 0; break;
+            case Calendar.TUESDAY: index = 1; break;
+            case Calendar.WEDNESDAY: index = 2; break;
+            case Calendar.THURSDAY: index = 3; break;
+            case Calendar.FRIDAY: index = 4; break;
+            case Calendar.SATURDAY: index = 5; break;
+            case Calendar.SUNDAY: index = 6; break;
+            default: index = 0;
+        }
+        
+        String query = "SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r,city c,schedule s WHERE (b.ROUTE_ID = r.ROUTE_ID) AND (b.LAST_DESTINATION =c.CITY_ID) AND AND (s.BUS_ID = b.BUS_ID) AND r.ROUTE_NAME = ?  AND c.CITY_NAME = ? AND s."+week_id_cap[index]+" = 1";
+    //String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
        // String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ? AND (STATE = 1)";
         Object[] data = new Object[]{routeName};
         Connection connection =DBConnection.getDBConnection().getConnection();
