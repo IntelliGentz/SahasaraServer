@@ -32,7 +32,7 @@ public class Alert_Resource {
     @POST
     @Path("subupdate/")
     public void getBusList(String request) {
-        /*JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
+        JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
         Iterable<?> keys = jsonObject.entrySet();
         Map<String, Object> attributes = new HashMap<String, Object>();
         Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
@@ -52,6 +52,8 @@ public class Alert_Resource {
 
         try {
             BusController.updateBusLocations(busList);
+            System.out.println("LOCATION UPDATED =========" + System.currentTimeMillis() + "============= :"+request);
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -60,7 +62,7 @@ public class Alert_Resource {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
-        }*/
+        }
         //System.out.println("ALERT =========" + System.currentTimeMillis() + "============= :"+request);
     }
 
@@ -70,6 +72,17 @@ public class Alert_Resource {
     @Path("proximity/")
     public void getProximityAlert(String request) {
         JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
-        System.out.println("PROXIMITY =========" + System.currentTimeMillis() + "============= :"+request);
+        String busNumber = jsonObject.get("number").getAsString();
+        int cityId = Integer.parseInt(jsonObject.get("locationId").getAsString());
+        try {
+            BusController.updateLastDestination(busNumber,cityId);
+            System.out.println("PROXIMITY UPDATED =========" + System.currentTimeMillis() + "============= :"+request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
     }
 }

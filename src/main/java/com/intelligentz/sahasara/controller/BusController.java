@@ -53,10 +53,14 @@ public class BusController {
             default: index = 0;
         }
         
-        String query = "SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r,city c,schedule s WHERE (b.ROUTE_ID = r.ROUTE_ID) AND (b.LAST_DESTINATION =c.CITY_ID) AND AND (s.BUS_ID = b.BUS_ID) AND r.ROUTE_NAME = ?  AND c.CITY_NAME = ? AND s."+week_id_cap[index]+" = 1";
+        String query = "SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE " +
+                "FROM bus as b ,route as r,city as c,schedule as s " +
+                "WHERE (b.ROUTE_ID = r.ROUTE_ID) AND (b.LAST_DESTINATION =c.CITY_ID) " +
+                "AND (s.BUS_ID = b.BUS_ID) AND r.ROUTE_NAME = ?  " +
+                "AND c.CITY_NAME = ? AND s."+week_id_cap[index]+" = 1";
     //String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
        // String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ? AND (STATE = 1)";
-        Object[] data = new Object[]{routeName};
+        Object[] data = new Object[]{routeName, endCity};
         Connection connection =DBConnection.getDBConnection().getConnection();
         ResultSet resultSet = DBHandle.getData(connection, query, data);
 
@@ -67,7 +71,7 @@ public class BusController {
             double busLon = resultSet.getDouble(3);
             double busLat = resultSet.getDouble(4);
 
-            if(DistanceCalculator.isAtRange(busLat, busLon, latitude, longitude, 2))
+            if(DistanceCalculator.isAtRange(busLat, busLon, latitude, longitude, 10))
                 busList.add(new Bus(busName,busLon,busLat));
         }
         connection.close();
@@ -190,7 +194,7 @@ public class BusController {
             double lon = deviceObject.get("lon").getAsDouble();
             double lat = deviceObject.get("lat").getAsDouble();
 
-            String query2="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
+            String query2="UPDATE bus SET CUR_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
             Object data2[]={timeStamp,lon,lat,busNo};
 
             status2 =DBHandle.setData(connection,query2,data2);
@@ -209,7 +213,7 @@ public class BusController {
         boolean status = false;
 
         for(Bus bus : busses){
-            String query="UPDATE bus SET CURRENT_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
+            String query="UPDATE bus SET CUR_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
             Object data[]={bus.getTime(),bus.getLongitude(),bus.getLatitude(),bus.getName()};
 
             status =DBHandle.setData(connection,query,data);
@@ -240,6 +244,27 @@ public class BusController {
             String query ="UPDATE bus SET LAST_DESTINATION=? WHERE BUS_NO=?";
             Object data[]={cityId,busNo};
             boolean status = DBHandle.setData(connection,query,data);
+
+            query = "SELECT START, END, bus.ROUTE_ID FROM bus,route where bus.ROUTE_ID = route.ROUTE_ID AND bus.BUS_NO = ?";
+            Object data2[] = {busNo};
+
+        ResultSet resultSet = DBHandle.getData(connection, query, data2);
+
+        if (resultSet.next()) {
+            int start = resultSet.getInt(1);
+            int end = resultSet.getInt(2);
+            int routeId = resultSet.getInt(3);
+
+            if (start != cityId && end != cityId) {
+                if (start == 406 && end == 407) {
+                    query ="UPDATE route SET START=? WHERE ROUTE_ID=?";
+                } else if(end == 407){
+                    query ="UPDATE route SET END=? WHERE ROUTE_ID=?";
+                }
+                Object data3[] = {cityId,routeId};
+                status = DBHandle.setData(connection,query,data3);
+            }
+        }
             connection.close();
             return status;
     }

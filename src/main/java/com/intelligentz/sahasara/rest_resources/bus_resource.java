@@ -172,6 +172,30 @@ public class bus_resource {
 
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
+    @GET
+    @Path("{app_id}/unsubproximity/")
+    public Response unsubscribeForProximityAlert( @PathParam("app_id") String app_id ) {
+        String result = "";
+        if (app_id.equals("*")){
+            app_id = IdeaBizConstants.APP_ID;
+        }
+//        ArrayList<String> deviced = new ArrayList<>();
+//        deviced.add("766426526");
+//        deviced.add("766426174");
+//        deviced.add("766426334");
+//        deviced.add("766426176");
+//        deviced.add("768511580");
+//        deviced.add("765140331");
+        try {
+            result = new DeviceHandler().unsubscribeForProximityAlert(app_id);
+        } catch (IdeabizException e) {
+            logger.error("Ideabiz error:"+e.getMessage());
+        }
+        return Response.status(Response.Status.OK).entity(result).build();
+    }
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @POST
     @Path("{app_id}/addProximity")
     public Response addProximityLocation(@PathParam("app_id") String app_id, String request) {
