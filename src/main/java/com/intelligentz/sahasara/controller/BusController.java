@@ -30,7 +30,8 @@ import java.util.List;
  * Created by Lakshan on 2017-03-24.
  */
 public class BusController {
-    
+
+
     // bus heading direction ?
     public static List<Bus> getAvailableBusses(double latitude,double longitude,String routeName,String endCity) throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
         
@@ -57,7 +58,7 @@ public class BusController {
                 "FROM bus as b ,route as r,city as c,schedule as s " +
                 "WHERE (b.ROUTE_ID = r.ROUTE_ID) AND (b.LAST_DESTINATION =c.CITY_ID) " +
                 "AND (s.BUS_ID = b.BUS_ID) AND r.ROUTE_NAME = ?  " +
-                "AND c.CITY_NAME = ? AND s."+week_id_cap[index]+" = 1";
+                "AND c.CITY_NAME = ? AND s."+week_id_cap[index]+" = 1 AND (b.STATE = 1)";
     //String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ?";
        // String query="SELECT b.BUS_ID, b.BUS_NAME, b.CURRENT_LONGITUDE, b.CURRENT_LATITUDE FROM bus b ,route r WHERE b.ROUTE_ID = r.ROUTE_ID AND r.ROUTE_NAME = ? AND (STATE = 1)";
         Object[] data = new Object[]{routeName, endCity};
@@ -71,7 +72,7 @@ public class BusController {
             double busLon = resultSet.getDouble(3);
             double busLat = resultSet.getDouble(4);
 
-            if(DistanceCalculator.isAtRange(busLat, busLon, latitude, longitude, 10))
+            if(DistanceCalculator.isAtRange(busLat, busLon, latitude, longitude, 200))
                 busList.add(new Bus(busName,busLon,busLat));
         }
         connection.close();
@@ -213,14 +214,10 @@ public class BusController {
         boolean status = false;
 
         for(Bus bus : busses){
-            String query="UPDATE bus SET CUR_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=? WHERE BUS_NO=?";
-            Object data[]={bus.getTime(),bus.getLongitude(),bus.getLatitude(),bus.getName()};
+            String query="UPDATE bus SET CUR_TIMESTAMP=?,CURRENT_LONGITUDE=?,CURRENT_LATITUDE=?,STATE=? WHERE BUS_NO=?";
+            Object data[]={bus.getTime(),bus.getLongitude(),bus.getLatitude(),bus.getState(),bus.getName()};
 
             status =DBHandle.setData(connection,query,data);
-
-            if(!status){
-                break;
-            }            
         }
         connection.close();
         return status;
@@ -241,11 +238,8 @@ public class BusController {
 
     public static boolean updateLastDestination(String busNo,int cityId) throws IOException, SQLException, PropertyVetoException{
             Connection connection = DBConnection.getDBConnection().getConnection();
-            String query ="UPDATE bus SET LAST_DESTINATION=? WHERE BUS_NO=?";
-            Object data[]={cityId,busNo};
-            boolean status = DBHandle.setData(connection,query,data);
-
-            query = "SELECT START, END, bus.ROUTE_ID FROM bus,route where bus.ROUTE_ID = route.ROUTE_ID AND bus.BUS_NO = ?";
+            boolean status = false;
+            String query = "SELECT START, END, bus.ROUTE_ID FROM bus,route where bus.ROUTE_ID = route.ROUTE_ID AND bus.BUS_NO = ?";
             Object data2[] = {busNo};
 
         ResultSet resultSet = DBHandle.getData(connection, query, data2);
@@ -254,16 +248,23 @@ public class BusController {
             int start = resultSet.getInt(1);
             int end = resultSet.getInt(2);
             int routeId = resultSet.getInt(3);
-
-            if (start != cityId && end != cityId) {
-                if (start == 406 && end == 407) {
-                    query ="UPDATE route SET START=? WHERE ROUTE_ID=?";
-                } else if(end == 407){
-                    query ="UPDATE route SET END=? WHERE ROUTE_ID=?";
-                }
-                Object data3[] = {cityId,routeId};
-                status = DBHandle.setData(connection,query,data3);
+            if (start == cityId || end == cityId) {
+                query ="UPDATE bus SET LAST_DESTINATION=? WHERE BUS_NO=?";
+                Object data[]={cityId,busNo};
+                status = DBHandle.setData(connection,query,data);
             }
+
+
+
+//            if (start != cityId && end != cityId) {
+//                if (start == 406 && end == 407) {
+//                    query ="UPDATE route SET START=? WHERE ROUTE_ID=?";
+//                } else if(end == 407){
+//                    query ="UPDATE route SET END=? WHERE ROUTE_ID=?";
+//                }
+//                Object data3[] = {cityId,routeId};
+//                status = DBHandle.setData(connection,query,data3);
+//            }
         }
             connection.close();
             return status;

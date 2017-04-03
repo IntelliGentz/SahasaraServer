@@ -22,7 +22,7 @@ public class RouteController {
 //    }
     
     public static List<Object[]> getAllRoutes() throws SQLException, ClassNotFoundException, IOException, PropertyVetoException{
-        String query="SELECT r.ROUTE_ID, r.ROUTE_NAME, (SELECT CITY_NAME FROM city WHERE CITY_ID=r.START), (SELECT CITY_NAME FROM city WHERE CITY_ID=r.END) FROM route r";
+        String query="SELECT DISTINCT r.ROUTE_ID, r.ROUTE_NAME, (SELECT CITY_NAME FROM city WHERE CITY_ID=r.START), (SELECT CITY_NAME FROM city WHERE CITY_ID=r.END) FROM route r, bus b WHERE r.ROUTE_ID = b.ROUTE_ID AND b.STATE = 1";
         Connection connection = DBConnection.getDBConnection().getConnection();
         ResultSet resultSet = DBHandle.getData(connection, query);
         List<Object[]> routeList=new ArrayList<Object[]>();

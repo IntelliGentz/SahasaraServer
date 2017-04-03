@@ -36,7 +36,7 @@ public class GetData {
         try 
         {
             connection = DBConnection.getDBConnection().getConnection();
-            String SQL1 = "SELECT BUS_ID,BUS_NAME,BUS_NO,mon,tue,wed,thu,fri,sat,sun FROM `schedule` natural join `bus` natural join `route` where route_id = ?";
+            String SQL1 = "SELECT BUS_ID,BUS_NAME,BUS_NO,STATE,mon,tue,wed,thu,fri,sat,sun FROM `schedule` natural join `bus` natural join `route` where route_id = ?";
 
             preparedStatement = connection.prepareStatement(SQL1);
             preparedStatement.setString(1, busRoute);
@@ -46,7 +46,7 @@ public class GetData {
             String[] week_id_cap = {"MON","TUE","WED","THU","FRI","SAT","SUN"};
             DateFormat df = new SimpleDateFormat("MM-dd");
             
-            data+=  "<thead><tr><th>Bus Number</th>";
+            data+=  "<thead><tr><th>Bus Number</th><th>State</th>";
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(cal.getTime());
                 int index = 0;
@@ -75,7 +75,7 @@ public class GetData {
                     cal.add(Calendar.DATE, index - j-7);
                 }
 							
-	    data+= "</tr></thead><tfoot><tr><th>Bus Number</th>";
+	    data+= "</tr></thead><tfoot><tr><th>Bus Number</th><th>State</th>";
 		for( int j = index; j <= 6; j++){
                     cal.add(Calendar.DATE, j - index);
                     String temp = df.format(cal.getTime());
@@ -93,12 +93,14 @@ public class GetData {
             while (resultSet.next()) {
                 String device_id = resultSet.getString("BUS_ID");
                 String bus_no = resultSet.getString("BUS_NO");
-                String bus_name = resultSet.getString("BUS_NAME");
-               
+                String bus_name = resultSet.getString("BUS_NAME").split(",")[0].trim();
+                int bus_state = resultSet.getInt("STATE");
+
                 LOGGER.log(Level.INFO, "getDevideData - result :{0}", device_id);
                 
                 data += "<tr>";
                 data += "<td>"+bus_name+"</td>";
+                data += "<td>"+((bus_state==1)?"ACTIVE":"INACTIVE")+"</td>";
                 for(int i = index; i <= 6; i++){
                     String state = resultSet.getBoolean(week_id[i])?"checked":"";
                     data += "<td><input onclick=\"sendResponse(\'"+device_id+"\',\'"+week_id[i]+"\',this)\" type=\"checkbox\" "+state+"></td>";

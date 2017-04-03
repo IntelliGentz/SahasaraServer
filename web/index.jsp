@@ -25,7 +25,9 @@
 <div class="container">
 	<div class="row">
 		<h2 class="text-center">iLocate Bus schedule table</h2>
-	</div>
+        <a style="position:absolute; right:10%" href="https://goo.gl/GO0aVq">Download the apk file</a>
+
+    </div>
         <!--iDisplayLength:10  change this to change the default value of table -->
         <select style="width:20%; position:absolute; left: 40%;" class="form-control input-sm" onchange="this.options[this.selectedIndex].onclick()">
             <option>Select the route</option>

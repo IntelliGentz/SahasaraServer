@@ -33,11 +33,13 @@ public class route_resource {
             routeList = (ArrayList<Object[]>) RouteController.getAllRoutes();
             JsonArray jsonArray = new JsonArray();
             for (Object[] route : routeList) {
-                JsonObject routeObject = new JsonObject();
-                routeObject.addProperty("name", (String) route[1]);
-                routeObject.addProperty("start",(String)route[2]);
-                routeObject.addProperty("end",(String)route[3]);
-                jsonArray.add(routeObject);
+                //if (route[1].equals("654/2") || route[1].equals("654/4") || route[1].equals("690")){
+                    JsonObject routeObject = new JsonObject();
+                    routeObject.addProperty("name", (String) route[1]);
+                    routeObject.addProperty("start",(String)route[2]);
+                    routeObject.addProperty("end",(String)route[3]);
+                    jsonArray.add(routeObject);
+                //}
             }
             JsonObject returnObject = new JsonObject();
             returnObject.addProperty("success",1);
