@@ -17,4 +17,5 @@ public class URLs {
     public static final String ADD_PROXIMITY_LOCATION_URL = "https://ideabiz.lk/apicall/iLocate/v1/addProximityLocation/";
     public static final String DELETE_PROXIMITY_LOCATION_URL = "https://ideabiz.lk/apicall/iLocate/v1/deleteProximityLocation/";
     public static final String GET_PROXIMITY_LOCATIONS_URL = "https://ideabiz.lk/apicall/iLocate/v1/getProximityLocations/";
+    public static final String GOOGLE_DIRECTION_URL = "https://maps.googleapis.com/maps/api/directions/json";
 }

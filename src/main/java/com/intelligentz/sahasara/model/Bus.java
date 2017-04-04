@@ -12,6 +12,7 @@ public class Bus {
     private int state;
     private int lastDestination;
     private String busRouteId;
+    private String expectedTime;
     // 1 - on,  0 - off
     private Schedule schedule;
     
@@ -118,5 +119,13 @@ public class Bus {
 
     public void setLastDestination(int lastDestination) {
         this.lastDestination = lastDestination;
+    }
+
+    public String getExpectedTime() {
+        return expectedTime;
+    }
+
+    public void setExpectedTime(String expectedTime) {
+        this.expectedTime = expectedTime;
     }
 }

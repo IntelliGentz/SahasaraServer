@@ -7,6 +7,7 @@ import com.intelligentz.sahasara.constants.IdeaBizConstants;
 import com.intelligentz.sahasara.controller.BusController;
 import com.intelligentz.sahasara.exception.IdeabizException;
 import com.intelligentz.sahasara.handler.DeviceHandler;
+import com.intelligentz.sahasara.handler.GoogleAPIHandler;
 import com.intelligentz.sahasara.model.Bus;
 import org.apache.log4j.Logger;
 
@@ -127,12 +128,16 @@ public class bus_resource {
         ArrayList<Bus> busList;
         try {
             busList = (ArrayList<Bus>) BusController.getAvailableBusses(Double.parseDouble(lat),Double.parseDouble(lon),route,heading);
+            String destination = lat.trim() + "," + lon.trim();
+            busList = new GoogleAPIHandler().getBusListDirection(busList,destination);
             JsonArray jsonArray = new JsonArray();
             for (Bus bus : busList) {
                 JsonObject busObject = new JsonObject();
                 busObject.addProperty("name",bus.getName());
                 busObject.addProperty("lat",bus.getLatitude());
                 busObject.addProperty("lon",bus.getLongitude());
+                String expectedatime = bus.getExpectedTime() == null ? " " : bus.getExpectedTime();
+                busObject.addProperty("duration",expectedatime);
                 jsonArray.add(busObject);
             }
             JsonObject returnObject = new JsonObject();
